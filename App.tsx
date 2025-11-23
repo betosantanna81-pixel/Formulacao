@@ -89,29 +89,35 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen p-4 md:p-8 bg-gray-100 flex flex-col gap-6">
       
-      <h1 className="text-3xl font-bold text-center text-blue-500 mb-[-0.5rem]">Formulação de Micros</h1>
+      <div className="relative w-full mb-2">
+        {/* Updated Title: Dark Moss Green (green-900), No Underline */}
+        <h1 className="text-3xl text-center text-green-900 uppercase font-bold">Formulação de Micros</h1>
+        <div className="absolute right-0 top-0 mt-2 text-xs text-gray-400 font-medium select-none opacity-70">
+            Desenvolvido por "Beto Santanna"
+        </div>
+      </div>
 
       {/* Header Section */}
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <div className="flex flex-col md:flex-row md:items-center gap-4 mb-2">
-          <div className="flex items-center">
-            <span className="bg-blue-800 text-white px-4 py-2 font-bold rounded-l-md w-32 text-center shadow-sm">Produto</span>
+          <div className="flex items-center shadow-sm">
+            <span className="bg-blue-800 text-white px-4 py-2 font-bold w-32 text-center border border-blue-800">Produto</span>
             <input 
               type="text" 
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
-              className="border-y-2 border-r-2 border-blue-800 px-4 py-2 font-semibold text-lg rounded-r-md outline-none focus:ring-2 focus:ring-blue-400 w-full md:w-64 bg-white text-gray-900 shadow-sm"
+              className="border border-blue-800 border-l-0 px-4 py-2 font-semibold text-lg outline-none focus:ring-2 focus:ring-blue-400 w-full md:w-64 bg-white text-gray-900"
               placeholder="Nome do Produto"
             />
           </div>
-          <div className="flex items-center">
-            <span className="bg-blue-600 text-white px-4 py-2 font-bold rounded-l-md w-32 text-center shadow-sm">Quantidade</span>
+          <div className="flex items-center shadow-sm">
+            <span className="bg-blue-600 text-white px-4 py-2 font-bold w-32 text-center border border-blue-600">Quantidade</span>
             <div className="relative w-full md:w-48">
               <input 
                 type="number" 
                 value={totalQuantity === 0 ? '' : totalQuantity}
                 onChange={(e) => setTotalQuantity(parseFloat(e.target.value) || 0)}
-                className="border-y-2 border-r-2 border-blue-600 px-4 py-2 font-semibold text-lg rounded-r-md outline-none focus:ring-2 focus:ring-blue-400 w-full bg-white text-gray-900 text-right pr-8 shadow-sm"
+                className="border border-blue-600 border-l-0 px-4 py-2 font-semibold text-lg outline-none focus:ring-2 focus:ring-blue-400 w-full bg-white text-gray-900 text-right pr-8 h-full"
                 placeholder="0"
               />
               <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 font-bold pointer-events-none">Kg</span>
@@ -151,10 +157,11 @@ const App: React.FC = () => {
                     {COMPONENT_KEYS.map(key => (
                         <td key={key} className="border-r border-blue-200 p-0 h-10 border-b border-blue-200">
                              <InputCell 
-                                value={targets[key] === 0 ? '' : targets[key]} 
+                                value={targets[key]}
                                 onValueChange={(val) => handleTargetChange(key, val)}
                                 className="bg-white text-blue-900 font-bold text-center"
-                                placeholder="0"
+                                placeholder="0,00"
+                                isDecimal={true}
                             />
                         </td>
                     ))}
@@ -177,7 +184,7 @@ const App: React.FC = () => {
                     <th className="px-3 py-2 text-left border-r border-gray-400">Matéria Prima</th>
                     <th className="px-3 py-2 text-left border-r border-gray-400">Fornecedor</th>
                     <th className="px-3 py-2 text-center border-r border-gray-400">% (do total)</th>
-                    <th className="px-3 py-2 text-right border-r border-gray-400">Quantidade (Kg)</th>
+                    <th className="px-3 py-2 text-center border-r border-gray-400">Quantidade (Kg)</th>
                     {COMPONENT_KEYS.map(key => (
                         <th key={key} className="px-2 py-2 text-center border-r border-gray-400">{key}</th>
                     ))}
@@ -194,7 +201,7 @@ const App: React.FC = () => {
                                 <TextCell 
                                     value={row.materialName} 
                                     onValueChange={(v) => handleRowChange(row.id, 'materialName', v)}
-                                    placeholder=""
+                                    placeholder="inserir"
                                     className="px-3 text-gray-800 font-medium bg-white"
                                 />
                             </td>
@@ -203,7 +210,7 @@ const App: React.FC = () => {
                                 <TextCell 
                                     value={row.supplier} 
                                     onValueChange={(v) => handleRowChange(row.id, 'supplier', v)}
-                                    placeholder=""
+                                    placeholder="inserir"
                                     className="px-3 text-gray-700 bg-white"
                                 />
                             </td>
@@ -214,10 +221,11 @@ const App: React.FC = () => {
                                     onValueChange={(v) => handleRowChange(row.id, 'percentage', parseFloat(v) || 0)}
                                     className="text-center font-bold text-gray-800 bg-white"
                                     placeholder="0"
+                                    isDecimal={true}
                                 />
                             </td>
-                            {/* Quantity (Kg) - Calculated / Read Only (Darker BG) */}
-                            <td className="px-3 text-right font-mono text-gray-900 font-bold border-r border-gray-200 bg-gray-200 flex items-center justify-end h-9">
+                            {/* Quantity (Kg) - Calculated / Read Only (Darker BG) - CENTERED */}
+                            <td className="px-3 text-center font-mono text-gray-900 font-bold border-r border-gray-200 bg-gray-200 flex items-center justify-center h-9">
                                 {formatNumber(rowQty, 2)}
                             </td>
                             {/* Components - Editable */}
@@ -246,11 +254,13 @@ const App: React.FC = () => {
 
                 {/* Totals Footer for Grid - Read Only (Darker BG) */}
                  <tr className="bg-gray-200 font-bold border-t-2 border-gray-300">
-                    <td className="px-3 py-2 text-gray-700 uppercase text-xs tracking-wider">TOTAIS</td>
                     <td className="border-r border-gray-300"></td>
+                    {/* TOTAIS label moved to Supplier column, Right Aligned */}
+                    <td className="px-3 py-2 text-gray-700 uppercase text-xs tracking-wider text-right border-r border-gray-300">TOTAIS</td>
                     <td className={`px-2 py-2 text-center border-r border-gray-300 ${Math.abs(totalPercentage - 100) > 0.1 ? 'text-red-600' : 'text-green-800'}`}>
                         {formatNumber(totalPercentage)}%
                     </td>
+                    {/* Centered Total Quantity */}
                     <td className="px-3 py-2 text-center border-r border-gray-300 font-mono text-black">
                         {formatNumber(totalCalculatedQuantity, 2)}
                     </td>
