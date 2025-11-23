@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Trash2, Save, Download } from 'lucide-react';
+import { Plus, Trash2, Save, Download, X, HelpCircle } from 'lucide-react';
 import { InputCell, TextCell } from './components/InputCell';
 import { ChemicalComponents, RawMaterialRow, ComponentKey } from './types';
 import { COMPONENT_KEYS, INITIAL_ROWS, INITIAL_TARGETS } from './constants';
@@ -8,6 +8,7 @@ const App: React.FC = () => {
   // --- State ---
   const [productName, setProductName] = useState<string>("");
   const [totalQuantity, setTotalQuantity] = useState<number>(0);
+  const [showInstructions, setShowInstructions] = useState<boolean>(false);
   
   const [targets, setTargets] = useState<ChemicalComponents>(INITIAL_TARGETS);
   const [rows, setRows] = useState<RawMaterialRow[]>(INITIAL_ROWS);
@@ -162,6 +163,7 @@ const App: React.FC = () => {
                                 className="bg-white text-blue-900 font-bold text-center"
                                 placeholder="0,00"
                                 isDecimal={true}
+                                suffix="%"
                             />
                         </td>
                     ))}
@@ -271,14 +273,24 @@ const App: React.FC = () => {
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-2">
-        <button 
-            onClick={addRow}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition-colors"
-        >
-            <Plus size={18} />
-            Adicionar Matéria Prima
-        </button>
+      <div className="flex justify-between items-start mt-2">
+        <div className="flex flex-col gap-3">
+          <button 
+              onClick={addRow}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition-colors"
+          >
+              <Plus size={18} />
+              Adicionar Matéria Prima
+          </button>
+          
+          <button 
+            onClick={() => setShowInstructions(true)}
+            className="flex items-center gap-2 text-blue-700 hover:text-blue-900 font-medium text-sm px-2 py-1 hover:bg-blue-50 rounded transition-colors w-fit"
+          >
+             <HelpCircle size={16} />
+             Instruções de uso
+          </button>
+        </div>
 
         <div className="flex gap-2">
             <button className="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded shadow transition-colors" onClick={() => alert("Funcionalidade de salvar seria implementada aqui.")}>
@@ -294,6 +306,44 @@ const App: React.FC = () => {
           <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-sm">
             <p className="text-red-700 font-medium">Atenção: A soma das porcentagens não é 100% ({formatNumber(totalPercentage)}%). Ajuste as quantidades.</p>
           </div>
+      )}
+
+      {/* Instructions Modal */}
+      {showInstructions && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 relative">
+            <button 
+              onClick={() => setShowInstructions(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            >
+              <X size={24} />
+            </button>
+            
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <HelpCircle className="text-blue-600" />
+              Instruções de Uso
+            </h2>
+            
+            <ol className="list-decimal pl-5 space-y-2 text-sm text-gray-700">
+              <li>Preencher o Nome do Produto a ser Formulado</li>
+              <li>Preencher a Quantidade total desejada</li>
+              <li>Na Linha de Teor (Meta) preencher as % desejadas do Produto Final</li>
+              <li>Inserir a Primeira Materia Prima, os teores de cada elemento na linha e por fim a % dessa materia prima na formulação até que seja alcançado o Teor (meta) do elemento desejado.</li>
+              <li>Adicionar Novas Materias Primas ou Apagar Linhas com Materias Primas Indesejadas.</li>
+              <li>% total deve sempre ser igual a 100%.</li>
+              <li>As quantidades relativas da Formulação são calculadas automaticamente ao lado da % do total.</li>
+            </ol>
+            
+            <div className="mt-6 flex justify-end">
+              <button 
+                onClick={() => setShowInstructions(false)}
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+              >
+                Entendi
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>

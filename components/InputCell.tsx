@@ -84,7 +84,7 @@ export const InputCell: React.FC<InputCellProps> = ({
         className={`w-full h-full px-2 py-1 outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm ${className}`}
         {...props}
       />
-      {suffix && <span className="absolute right-6 text-xs text-gray-400 pointer-events-none">{suffix}</span>}
+      {suffix && <span className="absolute right-1 text-xs text-gray-400 pointer-events-none">{suffix}</span>}
     </div>
   );
 };
